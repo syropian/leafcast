@@ -17,7 +17,7 @@ export default async function Command() {
       },
     })
   ) {
-    const toast = await showToast({ title: "Authorizing device...", style: Toast.Style.Animated });
+    const toast = await showToast({ title: "Fetching token...", style: Toast.Style.Animated });
     const { deviceAddress } = getPreferenceValues<Preferences>();
     try {
       const response = await axios.post(`http://${deviceAddress}:16021/api/v1/new`);
