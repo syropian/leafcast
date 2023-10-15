@@ -6,7 +6,8 @@
   "icon": "command-icon.png",
   "author": "syropian",
   "categories": [
-    "Fun"
+    "Applications",
+    "Other"
   ],
   "license": "MIT",
   "commands": [
