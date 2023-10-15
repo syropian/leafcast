@@ -2,7 +2,7 @@ import { getPreferenceValues, LocalStorage, showToast, Toast } from "@raycast/ap
 import axios from "axios";
 
 export default async function Command() {
-  const { deviceAddress } = getPreferenceValues<Preferences>();
+  const { deviceAddress } = getPreferenceValues<ExtensionPreferences>();
   const toast = await showToast({ title: "Authorizing device...", style: Toast.Style.Animated });
   const deviceToken = await LocalStorage.getItem<string>("device-token");
 

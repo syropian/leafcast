@@ -12,21 +12,15 @@
   "commands": [
     {
       "name": "pair-device",
-      "title": "Pair device",
+      "title": "Pair Device",
       "description": "Pairs your Nanoleaf device with Raycast",
-      "mode": "no-view"
+      "mode": "view"
     },
     {
-      "name": "reset-brightness",
-      "title": "Reset brightness",
-      "description": "Resets brightness to 69%",
-      "mode": "no-view"
-    },
-    {
-      "name": "on-camera-brightness",
-      "title": "Set brightness for on-camera",
-      "description": "Sets brightness to 20%",
-      "mode": "no-view"
+      "name": "control-lights",
+      "title": "Control Lights",
+      "description": "Control various aspects of your Nanoleaf light panels",
+      "mode": "view"
     }
   ],
   "dependencies": {
