@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Color, Detail, Icon, List, showToast, Toast } from "@raycast/api";
+import { Action, ActionPanel, Color, Icon, List, showToast, Toast } from "@raycast/api";
 import { useDevice } from "./hooks/use-device";
 import { useCachedState } from "@raycast/utils";
 import { useState } from "react";
