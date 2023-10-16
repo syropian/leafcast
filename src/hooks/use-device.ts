@@ -89,6 +89,21 @@ export function useDevice() {
     _getDeviceMetadata();
   }
 
+  async function setDeviceColor(color: tinycolor.ColorFormats.HSL) {
+    await _updateState({
+      hue: {
+        value: Math.round(color.h),
+      },
+      sat: {
+        value: Math.min(Math.max(Math.round(color.s * 100), 0), 100),
+      },
+      brightness: {
+        value: Math.min(Math.max(Math.round(color.l * 100), 0), 100),
+      },
+    });
+    _getDeviceMetadata();
+  }
+
   async function turnOffDevice() {
     await _updateState({
       on: {
@@ -126,6 +141,7 @@ export function useDevice() {
     isLoading,
     pairDevice,
     setDeviceBrightness,
+    setDeviceColor,
     turnOffDevice,
     turnOnDevice,
     updateDeviceEffect,

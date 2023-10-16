@@ -16,6 +16,7 @@ import {
 import { useDevice } from "./hooks/use-device";
 import { showFailureToast, useCachedState } from "@raycast/utils";
 import { useState } from "react";
+import tinycolor from "tinycolor2";
 
 export default function Command() {
   const {
@@ -27,6 +28,7 @@ export default function Command() {
     turnOnDevice,
     getDeviceEffects,
     updateDeviceEffect,
+    setDeviceColor,
   } = useDevice();
   const [effects, setEffects] = useCachedState<string[]>("device-effects", deviceMetadata?.effects.effectsList ?? []);
   const [customBrightnessValues, setCustomBrightnessValues] = useCachedState<number[]>("custom-brightness-values", []);
@@ -61,6 +63,10 @@ export default function Command() {
 
     setCustomBrightnessValues((vals) => [...vals, value]);
     await showToast({ title: "Custom brightness value added successfully", style: Toast.Style.Success });
+  }
+
+  async function handleAddCustomColor(color: tinycolor.ColorFormats.HSL) {
+    await setDeviceColor(color);
   }
 
   async function clearCustomBrightnessValues() {
@@ -115,7 +121,7 @@ export default function Command() {
           />
           <List.Item
             title="Select effect"
-            accessories={[{ text: deviceMetadata?.effects.select }]}
+            accessories={[{ text: deviceMetadata?.effects.select.replace("*Solid*", "Solid Color") }]}
             icon={Icon.Stars}
             actions={
               <ActionPanel>
@@ -166,6 +172,19 @@ export default function Command() {
                     style={Action.Style.Destructive}
                   />
                 )}
+              </ActionPanel>
+            }
+          />
+          <List.Item
+            title="Set Color"
+            icon={Icon.Swatch}
+            actions={
+              <ActionPanel>
+                <Action.Push
+                  title="Set Color"
+                  icon={Icon.Swatch}
+                  target={<CustomColorForm onAddCustomColor={handleAddCustomColor} />}
+                />
               </ActionPanel>
             }
           />
@@ -237,6 +256,34 @@ function CustomBrightnessForm({ onAddCustomBrightnessValue }: CustomBrightnessFo
         onBlur={validateValue}
         error={validationError}
       />
+    </Form>
+  );
+}
+
+interface CustomColorFormProps {
+  onAddCustomColor: (value: tinycolor.ColorFormats.HSL) => void;
+}
+
+function CustomColorForm({ onAddCustomColor }: CustomColorFormProps) {
+  const { pop } = useNavigation();
+  const [value, setValue] = useState<string>("red");
+
+  function handleAddCustomColor({ color }: { color: string }) {
+    const colorValue = tinycolor(color).toHsl();
+
+    onAddCustomColor(colorValue);
+    pop();
+  }
+
+  return (
+    <Form
+      actions={
+        <ActionPanel>
+          <Action.SubmitForm onSubmit={handleAddCustomColor} />
+        </ActionPanel>
+      }
+    >
+      <Form.TextField id="color" title="Color" value={value} onChange={setValue} />
     </Form>
   );
 }
