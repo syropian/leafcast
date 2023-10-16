@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Color, Icon, List, showToast, Toast } from "@raycast/api";
+import { Action, ActionPanel, Color, Icon, List, showToast, Toast, launchCommand, LaunchType } from "@raycast/api";
 import { useDevice } from "./hooks/use-device";
 import { useCachedState } from "@raycast/utils";
 import { useState } from "react";
@@ -32,6 +32,10 @@ export default function Command() {
   async function doUpdateDeviceEffect(effect: string) {
     await updateDeviceEffect(effect);
     await showToast({ title: `Effect set to ${effect}`, style: Toast.Style.Success });
+  }
+
+  async function launchPairDeviceCommand() {
+    await launchCommand({ name: "pair-device", type: LaunchType.UserInitiated });
   }
 
   return (
@@ -112,11 +116,7 @@ export default function Command() {
           actions={
             <ActionPanel>
               <ActionPanel.Submenu title="Pair Device">
-                <Action.OpenInBrowser
-                  title="Pair Device"
-                  url="raycast://extensions/syropian/leafcast/pair-device"
-                  icon={Icon.Plug}
-                />
+                <Action title="Pair Device" icon={Icon.Plug} onAction={launchPairDeviceCommand} />
               </ActionPanel.Submenu>
             </ActionPanel>
           }
