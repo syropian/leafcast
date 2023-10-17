@@ -1,10 +1,10 @@
 import { showToast, Toast, confirmAlert, List, Icon, Image, Color } from "@raycast/api";
 import { showFailureToast } from "@raycast/utils";
-import { useDevice } from "./hooks/use-device";
+import { useDeviceApi } from "./hooks/use-device-api";
 import { useEffect, useState } from "react";
 
 export default function Command() {
-  const { pairDevice } = useDevice();
+  const { pairDevice } = useDeviceApi();
   const [status, setStatus] = useState("Waiting to pair...");
   const [message, setMessage] = useState("");
   const [icon, setIcon] = useState<Image.ImageLike>(Icon.Clock);

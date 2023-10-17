@@ -30,10 +30,10 @@ interface DeviceMetadata {
     effectsList: string[];
   };
 }
-export function useDevice() {
+export function useDeviceApi() {
   const [deviceToken, setDeviceToken] = useCachedState<string>("device-token", "");
   const [deviceMetadata, setDeviceMetadata] = useCachedState<DeviceMetadata | null>("device-metadata", null);
-  const [isLoading, setLoading] = useState<boolean>(true);
+  const [isConnecting, setConnected] = useState<boolean>(true);
   const { deviceAddress } = getPreferenceValues<ExtensionPreferences>();
 
   const http = axios.create({
@@ -42,7 +42,7 @@ export function useDevice() {
 
   useEffect(() => {
     if (!deviceToken) {
-      setLoading(false);
+      setConnected(false);
       return;
     }
 
@@ -59,7 +59,7 @@ export function useDevice() {
     } catch (e) {
       console.log(e);
     } finally {
-      setLoading(false);
+      setConnected(false);
     }
   }
 
@@ -138,7 +138,7 @@ export function useDevice() {
     deviceMetadata,
     deviceToken,
     getDeviceEffects,
-    isLoading,
+    isConnecting,
     pairDevice,
     setDeviceBrightness,
     setDeviceColor,

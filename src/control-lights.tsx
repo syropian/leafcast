@@ -8,31 +8,36 @@ import {
   Toast,
   launchCommand,
   LaunchType,
-  Form,
-  useNavigation,
   confirmAlert,
   Alert,
 } from "@raycast/api";
-import { useDevice } from "./hooks/use-device";
+import { useDeviceApi } from "./hooks/use-device-api";
 import { showFailureToast, useCachedState } from "@raycast/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import tinycolor from "tinycolor2";
+import { AddCustomBrightnessForm } from "./components/AddCustomBrightnessForm";
+import { SetCustomColorForm } from "./components/SetCustomColorForm";
 
 export default function Command() {
   const {
     deviceMetadata,
     deviceToken,
-    isLoading,
+    getDeviceEffects,
+    isConnecting,
     setDeviceBrightness,
+    setDeviceColor,
     turnOffDevice,
     turnOnDevice,
-    getDeviceEffects,
     updateDeviceEffect,
-    setDeviceColor,
-  } = useDevice();
+  } = useDeviceApi();
   const [effects, setEffects] = useCachedState<string[]>("device-effects", deviceMetadata?.effects.effectsList ?? []);
+  const [customColors, setCustomColors] = useCachedState<tinycolor.ColorFormats.HSL[]>("custom-colors", []);
   const [customBrightnessValues, setCustomBrightnessValues] = useCachedState<number[]>("custom-brightness-values", []);
   const [isLoadingEffects, setIsLoadingEffects] = useState<boolean>(false);
+
+  useEffect(() => {
+    setCustomColors([]);
+  }, []);
 
   async function doSetDeviceBrightness(brightness: number) {
     await setDeviceBrightness(brightness);
@@ -65,8 +70,12 @@ export default function Command() {
     await showToast({ title: "Custom brightness value added successfully", style: Toast.Style.Success });
   }
 
-  async function handleAddCustomColor(color: tinycolor.ColorFormats.HSL) {
+  async function handleSetCustomColor(color: tinycolor.ColorFormats.HSL, persist?: boolean) {
     await setDeviceColor(color);
+    if (persist) {
+      // Todo: Avoid dupes
+      setCustomColors((colors) => [...colors, color]);
+    }
   }
 
   async function clearCustomBrightnessValues() {
@@ -162,7 +171,7 @@ export default function Command() {
                 <Action.Push
                   title="Add Custom Brightness"
                   icon={Icon.PlusCircle}
-                  target={<CustomBrightnessForm onAddCustomBrightnessValue={handleAddCustomBrightnessValue} />}
+                  target={<AddCustomBrightnessForm onAddCustomBrightnessValue={handleAddCustomBrightnessValue} />}
                 />
                 {!!customBrightnessValues.length && (
                   <Action
@@ -180,17 +189,26 @@ export default function Command() {
             icon={Icon.Swatch}
             actions={
               <ActionPanel>
+                <ActionPanel.Section title="Custom Colors">
+                  {customColors.map((color) => (
+                    <Action
+                      title={color.toString()}
+                      key={color.toString()}
+                      onAction={() => handleSetCustomColor(color)}
+                    />
+                  ))}
+                </ActionPanel.Section>
                 <Action.Push
                   title="Set Color"
                   icon={Icon.Swatch}
-                  target={<CustomColorForm onAddCustomColor={handleAddCustomColor} />}
+                  target={<SetCustomColorForm onSetCustomColor={handleSetCustomColor} />}
                 />
               </ActionPanel>
             }
           />
         </List.Section>
       )}
-      {!deviceToken && !isLoading && (
+      {!deviceToken && !isConnecting && (
         <List.EmptyView
           title="Device not paired"
           icon={Icon.LivestreamDisabled}
@@ -205,85 +223,5 @@ export default function Command() {
         />
       )}
     </List>
-  );
-}
-
-interface CustomBrightnessFormProps {
-  onAddCustomBrightnessValue: (value: number) => void;
-}
-
-function CustomBrightnessForm({ onAddCustomBrightnessValue }: CustomBrightnessFormProps) {
-  const { pop } = useNavigation();
-  const [value, setValue] = useState<string>("50");
-  const [validationError, setValidationError] = useState<string>("");
-
-  function validateValue(e: Form.Event<string>) {
-    const value = parseInt(e.target.value ?? "0", 10);
-
-    if (isNaN(value) || value < 0 || value > 100) {
-      setValidationError("Please enter a valid number between 0 and 100");
-    } else {
-      setValidationError("");
-    }
-  }
-
-  function handleAddCustomBrightnessValue({ value }: { value: string }) {
-    const numberValue = parseInt(value, 10);
-
-    if (isNaN(numberValue) || numberValue < 0 || numberValue > 100) {
-      setValidationError("Please enter a valid number between 0 and 100");
-    } else {
-      setValidationError("");
-      onAddCustomBrightnessValue(numberValue);
-      pop();
-    }
-  }
-
-  return (
-    <Form
-      actions={
-        <ActionPanel>
-          <Action.SubmitForm onSubmit={handleAddCustomBrightnessValue} />
-        </ActionPanel>
-      }
-    >
-      <Form.TextField
-        id="value"
-        title="Value"
-        info="Must be a number between 0 and 100"
-        value={value}
-        onChange={setValue}
-        onBlur={validateValue}
-        error={validationError}
-      />
-    </Form>
-  );
-}
-
-interface CustomColorFormProps {
-  onAddCustomColor: (value: tinycolor.ColorFormats.HSL) => void;
-}
-
-function CustomColorForm({ onAddCustomColor }: CustomColorFormProps) {
-  const { pop } = useNavigation();
-  const [value, setValue] = useState<string>("red");
-
-  function handleAddCustomColor({ color }: { color: string }) {
-    const colorValue = tinycolor(color).toHsl();
-
-    onAddCustomColor(colorValue);
-    pop();
-  }
-
-  return (
-    <Form
-      actions={
-        <ActionPanel>
-          <Action.SubmitForm onSubmit={handleAddCustomColor} />
-        </ActionPanel>
-      }
-    >
-      <Form.TextField id="color" title="Color" value={value} onChange={setValue} />
-    </Form>
   );
 }
