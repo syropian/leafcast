@@ -8,7 +8,7 @@ interface CustomColorFormProps {
 
 export function SetCustomColorForm({ onSetCustomColor }: CustomColorFormProps) {
   const { pop } = useNavigation();
-  const [value, setValue] = useState<string>("red");
+  const [value, setValue] = useState<string>("Red");
   const [persist, setPersist] = useState<boolean>(false);
 
   function handleSetCustomColor({ color }: { color: string }) {

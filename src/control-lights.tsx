@@ -13,10 +13,15 @@ import {
 } from "@raycast/api";
 import { useDeviceApi } from "./hooks/use-device-api";
 import { showFailureToast, useCachedState } from "@raycast/utils";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import tinycolor from "tinycolor2";
 import { AddCustomBrightnessForm } from "./components/AddCustomBrightnessForm";
 import { SetCustomColorForm } from "./components/SetCustomColorForm";
+
+interface HslWithName {
+  hsl: tinycolor.ColorFormats.HSL;
+  name: string;
+}
 
 export default function Command() {
   const {
@@ -31,13 +36,11 @@ export default function Command() {
     updateDeviceEffect,
   } = useDeviceApi();
   const [effects, setEffects] = useCachedState<string[]>("device-effects", deviceMetadata?.effects.effectsList ?? []);
-  const [customColors, setCustomColors] = useCachedState<tinycolor.ColorFormats.HSL[]>("custom-colors", []);
+  const [customColors, setCustomColors] = useCachedState<HslWithName[]>("custom-colors", []);
   const [customBrightnessValues, setCustomBrightnessValues] = useCachedState<number[]>("custom-brightness-values", []);
   const [isLoadingEffects, setIsLoadingEffects] = useState<boolean>(false);
 
-  useEffect(() => {
-    setCustomColors([]);
-  }, []);
+  console.log(customColors);
 
   async function doSetDeviceBrightness(brightness: number) {
     await setDeviceBrightness(brightness);
@@ -72,9 +75,15 @@ export default function Command() {
 
   async function handleSetCustomColor(color: tinycolor.ColorFormats.HSL, persist?: boolean) {
     await setDeviceColor(color);
+
     if (persist) {
-      // Todo: Avoid dupes
-      setCustomColors((colors) => [...colors, color]);
+      const colorName = tinycolor(color).toName() || "Unknown Color";
+      const hslColorWithName: HslWithName = {
+        hsl: color,
+        name: colorName,
+      };
+
+      setCustomColors((colors) => [...colors.filter((color) => color.name !== colorName), hslColorWithName]);
     }
   }
 
@@ -89,6 +98,21 @@ export default function Command() {
       })
     ) {
       setCustomBrightnessValues([]);
+    }
+  }
+
+  async function clearCustomColors() {
+    if (
+      await confirmAlert({
+        title:
+          "Are you sure you want to delete all of your custom colors? This will not delete any of the effects you have saved on your device.",
+        primaryAction: {
+          title: "Yes, Delete Them",
+          style: Alert.ActionStyle.Destructive,
+        },
+      })
+    ) {
+      setCustomColors([]);
     }
   }
 
@@ -189,20 +213,29 @@ export default function Command() {
             icon={Icon.Swatch}
             actions={
               <ActionPanel>
-                <ActionPanel.Section title="Custom Colors">
-                  {customColors.map((color) => (
-                    <Action
-                      title={color.toString()}
-                      key={color.toString()}
-                      onAction={() => handleSetCustomColor(color)}
-                    />
-                  ))}
-                </ActionPanel.Section>
                 <Action.Push
                   title="Set Color"
                   icon={Icon.Swatch}
                   target={<SetCustomColorForm onSetCustomColor={handleSetCustomColor} />}
                 />
+                {!!customColors.length && (
+                  <Action
+                    title="Clear Custom Colors List"
+                    icon={{ source: Icon.XMarkCircle, tintColor: Color.Red }}
+                    onAction={clearCustomColors}
+                    style={Action.Style.Destructive}
+                  />
+                )}
+                <ActionPanel.Section title="Custom Colors">
+                  {customColors.map((color, i) => (
+                    <Action
+                      title={color.name.charAt(0).toUpperCase() + color.name.slice(1)}
+                      key={color.name}
+                      onAction={() => handleSetCustomColor(color.hsl)}
+                      autoFocus={i === 0}
+                    />
+                  ))}
+                </ActionPanel.Section>
               </ActionPanel>
             }
           />
