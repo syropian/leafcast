@@ -35,7 +35,7 @@ export function CustomColorGrid({ colors: colorsFromProps, onDeleteCustomColor, 
         <ActionPanel>
           <Action.Push
             title="Add Custom Color"
-            icon={Icon.PlusCircleFilled}
+            icon={Icon.PlusCircle}
             target={<AddCustomColorForm onSetCustomColor={handleSetCustomColor} />}
           />
         </ActionPanel>

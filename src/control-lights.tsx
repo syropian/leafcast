@@ -224,7 +224,7 @@ export default function Command() {
                 />
                 <Action.Push
                   title="Add Custom Color"
-                  icon={Icon.PlusCircleFilled}
+                  icon={Icon.PlusCircle}
                   target={<AddCustomColorForm onSetCustomColor={handleSetCustomColor} />}
                 />
                 {!!customColors.length && (

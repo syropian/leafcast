@@ -50,6 +50,7 @@
     {
       "name": "deviceAddress",
       "description": "The IP address of your Nanoleaf device",
+      "placeholder": "(Optional)",
       "type": "textfield",
       "title": "Device IP",
       "required": false
