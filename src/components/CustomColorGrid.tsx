@@ -3,18 +3,15 @@ import tinycolor from "tinycolor2";
 import { AddCustomColorForm } from "./AddCustomColorForm";
 import { useState } from "react";
 import { createHslColorWithName } from "../utils";
-
-interface HslWithName {
-  hsl: tinycolor.ColorFormats.HSL;
-  name: string;
-}
+import { HslWithName } from "../types";
 
 interface Props {
   colors: HslWithName[];
-  onSetCustomColor: (value: tinycolor.ColorFormats.HSL) => void;
+  onDeleteCustomColor: (color: HslWithName) => void;
+  onSetCustomColor: (color: tinycolor.ColorFormats.HSL) => void;
 }
 
-export function CustomColorGrid({ colors: colorsFromProps, onSetCustomColor }: Props) {
+export function CustomColorGrid({ colors: colorsFromProps, onDeleteCustomColor, onSetCustomColor }: Props) {
   // We need this state to deal with a bug where the props are not updating after adding a new color
   const [colors, setColors] = useState<HslWithName[]>(colorsFromProps);
 
@@ -25,6 +22,13 @@ export function CustomColorGrid({ colors: colorsFromProps, onSetCustomColor }: P
 
     onSetCustomColor(color);
   }
+
+  function handleDeleteCustomColor(color: HslWithName) {
+    setColors((colors) => colors.filter((currentColor) => currentColor.name !== color.name));
+
+    onDeleteCustomColor(color);
+  }
+
   return (
     <Grid
       actions={
@@ -64,7 +68,11 @@ export function CustomColorGrid({ colors: colorsFromProps, onSetCustomColor }: P
           actions={
             <ActionPanel>
               <Action title="Set Color" onAction={() => onSetCustomColor(color.hsl)} />
-              <Action title="Delete Color" style={Action.Style.Destructive} />
+              <Action
+                title="Delete Color"
+                style={Action.Style.Destructive}
+                onAction={() => handleDeleteCustomColor(color)}
+              />
             </ActionPanel>
           }
           title={`${color.name.charAt(0).toUpperCase() + color.name.slice(1)}`}

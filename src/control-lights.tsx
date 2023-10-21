@@ -18,11 +18,7 @@ import tinycolor from "tinycolor2";
 import { AddCustomBrightnessForm } from "./components/AddCustomBrightnessForm";
 import { CustomColorGrid } from "./components/CustomColorGrid";
 import { createHslColorWithName } from "./utils";
-
-interface HslWithName {
-  hsl: tinycolor.ColorFormats.HSL;
-  name: string;
-}
+import { HslWithName } from "./types";
 
 export default function Command() {
   const {
@@ -111,6 +107,10 @@ export default function Command() {
     ) {
       setCustomColors([]);
     }
+  }
+
+  function handleDeleteCustomColor(color: HslWithName) {
+    setCustomColors((colors) => colors.filter((currentColor) => currentColor.name !== color.name));
   }
 
   return (
@@ -213,7 +213,13 @@ export default function Command() {
                 <Action.Push
                   title="Set Color"
                   icon={Icon.Swatch}
-                  target={<CustomColorGrid colors={customColors} onSetCustomColor={handleSetCustomColor} />}
+                  target={
+                    <CustomColorGrid
+                      colors={customColors}
+                      onSetCustomColor={handleSetCustomColor}
+                      onDeleteCustomColor={handleDeleteCustomColor}
+                    />
+                  }
                 />
                 {!!customColors.length && (
                   <Action
