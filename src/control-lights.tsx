@@ -13,7 +13,7 @@ import {
 } from "@raycast/api";
 import { useDeviceApi } from "./hooks/use-device-api";
 import { showFailureToast, useCachedState } from "@raycast/utils";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import tinycolor from "tinycolor2";
 import { AddCustomBrightnessForm } from "./components/AddCustomBrightnessForm";
 import { CustomColorGrid } from "./components/CustomColorGrid";
@@ -37,10 +37,6 @@ export default function Command() {
   const [customColors, setCustomColors] = useCachedState<HslWithName[]>("custom-colors", []);
   const [customBrightnessValues, setCustomBrightnessValues] = useCachedState<number[]>("custom-brightness-values", []);
   const [isLoadingEffects, setIsLoadingEffects] = useState<boolean>(false);
-
-  useEffect(() => {
-    console.log("Colors", customColors);
-  }, [customColors]);
 
   async function doSetDeviceBrightness(brightness: number) {
     await setDeviceBrightness(brightness);
