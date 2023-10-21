@@ -2,7 +2,7 @@ import { Action, ActionPanel, Grid, Icon } from "@raycast/api";
 import tinycolor from "tinycolor2";
 import { AddCustomColorForm } from "./AddCustomColorForm";
 import { useState } from "react";
-import { createHslColorWithName } from "../utils";
+import { capitalize, createHslColorWithName } from "../utils";
 import { HslWithName } from "../types";
 
 interface Props {
@@ -75,7 +75,7 @@ export function CustomColorGrid({ colors: colorsFromProps, onDeleteCustomColor, 
               />
             </ActionPanel>
           }
-          title={`${color.name.charAt(0).toUpperCase() + color.name.slice(1)}`}
+          title={capitalize(color.name)}
           subtitle={`hsl(${Math.round(color.hsl.h)}, ${Math.round(color.hsl.s) * 100}%, ${Math.round(
             color.hsl.l * 100
           )}%)`}

@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import tinycolor from "tinycolor2";
 import { AddCustomBrightnessForm } from "./components/AddCustomBrightnessForm";
 import { CustomColorGrid } from "./components/CustomColorGrid";
-import { createHslColorWithName } from "./utils";
+import { capitalize, createHslColorWithName } from "./utils";
 import { HslWithName } from "./types";
 
 export default function Command() {
@@ -232,7 +232,7 @@ export default function Command() {
                 <ActionPanel.Section title="Custom Colors">
                   {customColors.map((color) => (
                     <Action
-                      title={color.name.charAt(0).toUpperCase() + color.name.slice(1)}
+                      title={capitalize(color.name)}
                       key={color.name}
                       onAction={() => handleSetCustomColor(color.hsl)}
                     />
