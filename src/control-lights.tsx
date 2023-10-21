@@ -19,6 +19,7 @@ import { AddCustomBrightnessForm } from "./components/AddCustomBrightnessForm";
 import { CustomColorGrid } from "./components/CustomColorGrid";
 import { capitalize, createHslColorWithName } from "./utils";
 import { HslWithName } from "./types";
+import { AddCustomColorForm } from "./components/AddCustomColorForm";
 
 export default function Command() {
   const {
@@ -220,6 +221,11 @@ export default function Command() {
                       onDeleteCustomColor={handleDeleteCustomColor}
                     />
                   }
+                />
+                <Action.Push
+                  title="Add Custom Color"
+                  icon={Icon.PlusCircleFilled}
+                  target={<AddCustomColorForm onSetCustomColor={handleSetCustomColor} />}
                 />
                 {!!customColors.length && (
                   <Action
