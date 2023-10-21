@@ -12,7 +12,7 @@ interface Props {
 }
 
 export function CustomColorGrid({ colors: colorsFromProps, onDeleteCustomColor, onSetCustomColor }: Props) {
-  // We need this state to deal with a bug where the props are not updating after adding a new color
+  // We need this state to deal with a bug where the props are not updating after adding/removing a color
   const [colors, setColors] = useState<HslWithName[]>(colorsFromProps);
 
   function handleSetCustomColor(color: tinycolor.ColorFormats.HSL) {
@@ -76,9 +76,7 @@ export function CustomColorGrid({ colors: colorsFromProps, onDeleteCustomColor, 
             </ActionPanel>
           }
           title={capitalize(color.name)}
-          subtitle={`hsl(${Math.round(color.hsl.h)}, ${Math.round(color.hsl.s) * 100}%, ${Math.round(
-            color.hsl.l * 100
-          )}%)`}
+          subtitle={tinycolor(color.hsl).toHslString()}
         />
       ))}
     </Grid>
