@@ -79,7 +79,7 @@ export function useDeviceApi() {
         "/new",
         {},
         {
-          timeout: 5000,
+          timeout: 8000,
         }
       );
       const token = data.auth_token;
