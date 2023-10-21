@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Form, Icon, Keyboard, Toast, showToast } from "@raycast/api";
+import { Action, ActionPanel, Form, Icon, Toast, showToast } from "@raycast/api";
 import { useExec } from "@raycast/utils";
 import { useState } from "react";
 import { KNOWN_NANOLEAF_MAC_PREFIXES } from "../constants";
