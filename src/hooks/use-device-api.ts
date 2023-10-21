@@ -30,6 +30,7 @@ interface DeviceMetadata {
     effectsList: string[];
   };
 }
+
 export function useDeviceApi() {
   const { deviceAddress: deviceAddressFromPreferences, maintainBrightnessOnColorChange } =
     getPreferenceValues<ExtensionPreferences>();
