@@ -230,12 +230,11 @@ export default function Command() {
                   />
                 )}
                 <ActionPanel.Section title="Custom Colors">
-                  {customColors.map((color, i) => (
+                  {customColors.map((color) => (
                     <Action
                       title={color.name.charAt(0).toUpperCase() + color.name.slice(1)}
                       key={color.name}
                       onAction={() => handleSetCustomColor(color.hsl)}
-                      autoFocus={i === 0}
                     />
                   ))}
                 </ActionPanel.Section>
