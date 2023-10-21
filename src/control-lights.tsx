@@ -13,10 +13,10 @@ import {
 } from "@raycast/api";
 import { useDeviceApi } from "./hooks/use-device-api";
 import { showFailureToast, useCachedState } from "@raycast/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import tinycolor from "tinycolor2";
 import { AddCustomBrightnessForm } from "./components/AddCustomBrightnessForm";
-import { SetCustomColorForm } from "./components/SetCustomColorForm";
+import { CustomColorGrid } from "./components/CustomColorGrid";
 
 interface HslWithName {
   hsl: tinycolor.ColorFormats.HSL;
@@ -39,6 +39,10 @@ export default function Command() {
   const [customColors, setCustomColors] = useCachedState<HslWithName[]>("custom-colors", []);
   const [customBrightnessValues, setCustomBrightnessValues] = useCachedState<number[]>("custom-brightness-values", []);
   const [isLoadingEffects, setIsLoadingEffects] = useState<boolean>(false);
+
+  useEffect(() => {
+    console.log("Colors", customColors);
+  }, [customColors]);
 
   async function doSetDeviceBrightness(brightness: number) {
     await setDeviceBrightness(brightness);
@@ -71,19 +75,17 @@ export default function Command() {
     await showToast({ title: "Custom brightness value added successfully", style: Toast.Style.Success });
   }
 
-  async function handleSetCustomColor(color: tinycolor.ColorFormats.HSL, persist?: boolean) {
+  async function handleSetCustomColor(color: tinycolor.ColorFormats.HSL) {
+    const colorObj = tinycolor(color);
+    const colorName = colorObj.toName() || colorObj.toHexString();
+    const hslColorWithName: HslWithName = {
+      hsl: color,
+      name: colorName,
+    };
+
+    setCustomColors((colors) => [...colors.filter((color) => color.name !== colorName), hslColorWithName]);
+
     await setDeviceColor(color);
-
-    if (persist) {
-      const colorObj = tinycolor(color);
-      const colorName = colorObj.isValid() ? (tinycolor(color).toName() as string) : "Unknown Color";
-      const hslColorWithName: HslWithName = {
-        hsl: color,
-        name: colorName,
-      };
-
-      setCustomColors((colors) => [...colors.filter((color) => color.name !== colorName), hslColorWithName]);
-    }
   }
 
   async function clearCustomBrightnessValues() {
@@ -215,7 +217,7 @@ export default function Command() {
                 <Action.Push
                   title="Set Color"
                   icon={Icon.Swatch}
-                  target={<SetCustomColorForm onSetCustomColor={handleSetCustomColor} />}
+                  target={<CustomColorGrid colors={customColors} onSetCustomColor={handleSetCustomColor} />}
                 />
                 {!!customColors.length && (
                   <Action

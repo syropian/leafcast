@@ -1,0 +1,39 @@
+import { Action, ActionPanel, Form, useNavigation } from "@raycast/api";
+import { useState } from "react";
+import tinycolor from "tinycolor2";
+
+interface Props {
+  onSetCustomColor: (value: tinycolor.ColorFormats.HSL) => void;
+}
+
+export function AddCustomColorForm({ onSetCustomColor }: Props) {
+  const { pop } = useNavigation();
+  const [value, setValue] = useState<string>("Red");
+  const [error, setError] = useState<string>("");
+
+  function handleSetCustomColor({ color }: { color: string }) {
+    const colorObj = tinycolor(color);
+
+    if (colorObj.isValid()) {
+      setError("");
+      const colorValue = tinycolor(color).toHsl();
+      onSetCustomColor(colorValue);
+
+      pop();
+    } else {
+      setError("Invalid color");
+    }
+  }
+
+  return (
+    <Form
+      actions={
+        <ActionPanel>
+          <Action.SubmitForm onSubmit={handleSetCustomColor} />
+        </ActionPanel>
+      }
+    >
+      <Form.TextField id="color" title="Color" value={value} onChange={setValue} error={error} />
+    </Form>
+  );
+}
