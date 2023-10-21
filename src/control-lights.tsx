@@ -40,8 +40,6 @@ export default function Command() {
   const [customBrightnessValues, setCustomBrightnessValues] = useCachedState<number[]>("custom-brightness-values", []);
   const [isLoadingEffects, setIsLoadingEffects] = useState<boolean>(false);
 
-  console.log(customColors);
-
   async function doSetDeviceBrightness(brightness: number) {
     await setDeviceBrightness(brightness);
     await showToast({ title: `Brightness set to ${brightness}%`, style: Toast.Style.Success });
@@ -77,7 +75,8 @@ export default function Command() {
     await setDeviceColor(color);
 
     if (persist) {
-      const colorName = tinycolor(color).toName() || "Unknown Color";
+      const colorObj = tinycolor(color);
+      const colorName = colorObj.isValid() ? (tinycolor(color).toName() as string) : "Unknown Color";
       const hslColorWithName: HslWithName = {
         hsl: color,
         name: colorName,

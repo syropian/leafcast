@@ -49,10 +49,18 @@
   "preferences": [
     {
       "name": "deviceAddress",
-      "description": "IP address of your Nanoleaf device",
+      "description": "The IP address of your Nanoleaf device",
       "type": "textfield",
       "title": "Device IP",
-      "required": true
+      "required": false
+    },
+    {
+      "name": "maintainBrightnessOnColorChange",
+      "description": "Maintains brightness when setting the panels to a solid color. Useful for having a consistent brightness level on camera.",
+      "type": "checkbox",
+      "label": "Maintain brightness when changing colors",
+      "required": false,
+      "default": true
     }
   ]
 }

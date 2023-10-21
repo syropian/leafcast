@@ -1,11 +1,11 @@
 import { Action, ActionPanel, Form, useNavigation } from "@raycast/api";
 import { useState } from "react";
 
-interface CustomBrightnessFormProps {
+interface Props {
   onAddCustomBrightnessValue: (value: number) => void;
 }
 
-export function AddCustomBrightnessForm({ onAddCustomBrightnessValue }: CustomBrightnessFormProps) {
+export function AddCustomBrightnessForm({ onAddCustomBrightnessValue }: Props) {
   const { pop } = useNavigation();
   const [value, setValue] = useState<string>("50");
   const [validationError, setValidationError] = useState<string>("");

@@ -31,10 +31,16 @@ interface DeviceMetadata {
   };
 }
 export function useDeviceApi() {
+  const { deviceAddress: deviceAddressFromPreferences, maintainBrightnessOnColorChange } =
+    getPreferenceValues<ExtensionPreferences>();
+
+  const [deviceAddress, setDeviceAddress] = useCachedState<string>(
+    "device-address",
+    deviceAddressFromPreferences ?? ""
+  );
   const [deviceToken, setDeviceToken] = useCachedState<string>("device-token", "");
   const [deviceMetadata, setDeviceMetadata] = useCachedState<DeviceMetadata | null>("device-metadata", null);
   const [isConnecting, setConnected] = useState<boolean>(true);
-  const { deviceAddress } = getPreferenceValues<ExtensionPreferences>();
 
   const http = axios.create({
     baseURL: `http://${deviceAddress}:16021/api/v1`,
@@ -69,7 +75,13 @@ export function useDeviceApi() {
 
   async function pairDevice(): Promise<void> {
     try {
-      const { data } = await http.post("/new");
+      const { data } = await http.post(
+        "/new",
+        {},
+        {
+          timeout: 5000,
+        }
+      );
       const token = data.auth_token;
 
       if (token) {
@@ -97,9 +109,13 @@ export function useDeviceApi() {
       sat: {
         value: Math.min(Math.max(Math.round(color.s * 100), 0), 100),
       },
-      brightness: {
-        value: Math.min(Math.max(Math.round(color.l * 100), 0), 100),
-      },
+      ...(!maintainBrightnessOnColorChange
+        ? {
+            brightness: {
+              value: Math.min(Math.max(Math.round(color.l * 100), 0), 100),
+            },
+          }
+        : {}),
     });
     _getDeviceMetadata();
   }
@@ -140,6 +156,7 @@ export function useDeviceApi() {
     getDeviceEffects,
     isConnecting,
     pairDevice,
+    setDeviceAddress,
     setDeviceBrightness,
     setDeviceColor,
     turnOffDevice,

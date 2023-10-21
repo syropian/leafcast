@@ -2,11 +2,11 @@ import { Action, ActionPanel, Form, useNavigation } from "@raycast/api";
 import { useState } from "react";
 import tinycolor from "tinycolor2";
 
-interface CustomColorFormProps {
+interface Props {
   onSetCustomColor: (value: tinycolor.ColorFormats.HSL, persist?: boolean) => void;
 }
 
-export function SetCustomColorForm({ onSetCustomColor }: CustomColorFormProps) {
+export function SetCustomColorForm({ onSetCustomColor }: Props) {
   const { pop } = useNavigation();
   const [value, setValue] = useState<string>("Red");
   const [persist, setPersist] = useState<boolean>(false);
