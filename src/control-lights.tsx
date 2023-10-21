@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import tinycolor from "tinycolor2";
 import { AddCustomBrightnessForm } from "./components/AddCustomBrightnessForm";
 import { CustomColorGrid } from "./components/CustomColorGrid";
+import { createHslColorWithName } from "./utils";
 
 interface HslWithName {
   hsl: tinycolor.ColorFormats.HSL;
@@ -76,14 +77,9 @@ export default function Command() {
   }
 
   async function handleSetCustomColor(color: tinycolor.ColorFormats.HSL) {
-    const colorObj = tinycolor(color);
-    const colorName = colorObj.toName() || colorObj.toHexString();
-    const hslColorWithName: HslWithName = {
-      hsl: color,
-      name: colorName,
-    };
+    const hslColor = createHslColorWithName(color);
 
-    setCustomColors((colors) => [...colors.filter((color) => color.name !== colorName), hslColorWithName]);
+    setCustomColors((colors) => [...colors.filter((color) => color.name !== hslColor.name), hslColor]);
 
     await setDeviceColor(color);
   }

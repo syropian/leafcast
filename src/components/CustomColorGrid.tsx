@@ -1,6 +1,8 @@
 import { Action, ActionPanel, Grid, Icon } from "@raycast/api";
 import tinycolor from "tinycolor2";
 import { AddCustomColorForm } from "./AddCustomColorForm";
+import { useState } from "react";
+import { createHslColorWithName } from "../utils";
 
 interface HslWithName {
   hsl: tinycolor.ColorFormats.HSL;
@@ -12,28 +14,38 @@ interface Props {
   onSetCustomColor: (value: tinycolor.ColorFormats.HSL) => void;
 }
 
-export function CustomColorGrid({ colors, onSetCustomColor }: Props) {
+export function CustomColorGrid({ colors: colorsFromProps, onSetCustomColor }: Props) {
+  // We need this state to deal with a bug where the props are not updating after adding a new color
+  const [colors, setColors] = useState<HslWithName[]>(colorsFromProps);
+
+  function handleSetCustomColor(color: tinycolor.ColorFormats.HSL) {
+    const hslColor = createHslColorWithName(color);
+
+    setColors((colors) => [...colors.filter((color) => color.name !== hslColor.name), hslColor]);
+
+    onSetCustomColor(color);
+  }
   return (
     <Grid
-      key="add-custom-color"
       actions={
         <ActionPanel>
           <Action.Push
             title="Add Custom Color"
             icon={Icon.PlusCircleFilled}
-            target={<AddCustomColorForm onSetCustomColor={onSetCustomColor} />}
+            target={<AddCustomColorForm onSetCustomColor={handleSetCustomColor} />}
           />
         </ActionPanel>
       }
     >
       <Grid.Item
+        key="add-custom-color"
         content={Icon.PlusCircleFilled}
         actions={
           <ActionPanel>
             <Action.Push
               title="Add Custom Color"
               icon={Icon.PlusCircleFilled}
-              target={<AddCustomColorForm onSetCustomColor={onSetCustomColor} />}
+              target={<AddCustomColorForm onSetCustomColor={handleSetCustomColor} />}
             />
           </ActionPanel>
         }
