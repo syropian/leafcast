@@ -8,26 +8,22 @@ interface Props {
 export function AddCustomBrightnessForm({ onAddCustomBrightnessValue }: Props) {
   const { pop } = useNavigation();
   const [value, setValue] = useState<string>("50");
-  const [validationError, setValidationError] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
-  function validateValue(e: Form.Event<string>) {
-    const value = parseInt(e.target.value ?? "0", 10);
-
-    if (isNaN(value) || value < 0 || value > 100) {
-      setValidationError("Please enter a valid number between 0 and 100");
-    } else {
-      setValidationError("");
-    }
+  function handleSetValue(brightnessValue: string) {
+    setValue(brightnessValue);
+    setError("");
   }
 
   function handleAddCustomBrightnessValue({ value }: { value: string }) {
-    const numberValue = parseInt(value, 10);
+    const valueAsNumber = parseInt(value ?? "0", 10);
 
-    if (isNaN(numberValue) || numberValue < 0 || numberValue > 100) {
-      setValidationError("Please enter a valid number between 0 and 100");
+    if (isNaN(valueAsNumber) || valueAsNumber < 0 || valueAsNumber > 100) {
+      setError("Please enter a valid number between 0 and 100");
     } else {
-      setValidationError("");
-      onAddCustomBrightnessValue(numberValue);
+      setError("");
+      onAddCustomBrightnessValue(valueAsNumber);
+
       pop();
     }
   }
@@ -45,9 +41,9 @@ export function AddCustomBrightnessForm({ onAddCustomBrightnessValue }: Props) {
         title="Value"
         info="Must be a number between 0 and 100"
         value={value}
-        onChange={setValue}
-        onBlur={validateValue}
-        error={validationError}
+        onChange={handleSetValue}
+        onBlur={() => setError("")}
+        error={error}
       />
     </Form>
   );

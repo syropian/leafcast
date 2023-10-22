@@ -88,6 +88,7 @@ export default function Command() {
       })
     ) {
       setCustomBrightnessValues([]);
+      await showToast({ title: "Custom brightness values have been cleared", style: Toast.Style.Success });
     }
   }
 
@@ -103,11 +104,13 @@ export default function Command() {
       })
     ) {
       setCustomColors([]);
+      await showToast({ title: "Custom colors have been cleared", style: Toast.Style.Success });
     }
   }
 
-  function handleDeleteCustomColor(color: HsvWithName) {
+  async function handleDeleteCustomColor(color: HsvWithName) {
     setCustomColors((colors) => colors.filter((currentColor) => currentColor.name !== color.name));
+    await showToast({ title: `${color.name} was deleted`, style: Toast.Style.Success });
   }
 
   return (

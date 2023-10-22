@@ -25,6 +25,11 @@ export function AddCustomColorForm({ onSetCustomColor }: Props) {
     }
   }
 
+  function handleSetValue(value: string) {
+    setValue(value);
+    setError("");
+  }
+
   return (
     <Form
       actions={
@@ -33,7 +38,14 @@ export function AddCustomColorForm({ onSetCustomColor }: Props) {
         </ActionPanel>
       }
     >
-      <Form.TextField id="color" title="Color" value={value} onChange={setValue} error={error} />
+      <Form.TextField
+        id="color"
+        title="Color"
+        value={value}
+        onChange={handleSetValue}
+        error={error}
+        onBlur={() => setError("")}
+      />
     </Form>
   );
 }
