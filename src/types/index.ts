@@ -1,4 +1,4 @@
-export interface HslWithName {
-  hsl: tinycolor.ColorFormats.HSL;
+export interface HsvWithName {
+  hsv: tinycolor.ColorFormats.HSV;
   name: string;
 }

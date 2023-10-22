@@ -102,7 +102,7 @@ export function useDeviceApi() {
     _getDeviceMetadata();
   }
 
-  async function setDeviceColor(color: tinycolor.ColorFormats.HSL) {
+  async function setDeviceColor(color: tinycolor.ColorFormats.HSV) {
     await _updateState({
       hue: {
         value: Math.round(color.h),
@@ -113,7 +113,7 @@ export function useDeviceApi() {
       ...(!maintainBrightnessOnColorChange
         ? {
             brightness: {
-              value: Math.min(Math.max(Math.round(color.l * 100), 0), 100),
+              value: Math.min(Math.max(Math.round(color.v * 100), 0), 100),
             },
           }
         : {}),

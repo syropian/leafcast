@@ -17,8 +17,8 @@ import { useState } from "react";
 import tinycolor from "tinycolor2";
 import { AddCustomBrightnessForm } from "./components/AddCustomBrightnessForm";
 import { CustomColorGrid } from "./components/CustomColorGrid";
-import { capitalize, createHslColorWithName } from "./utils";
-import { HslWithName } from "./types";
+import { capitalize, createHsvColorWithName } from "./utils";
+import { HsvWithName } from "./types";
 import { AddCustomColorForm } from "./components/AddCustomColorForm";
 
 export default function Command() {
@@ -34,7 +34,7 @@ export default function Command() {
     updateDeviceEffect,
   } = useDeviceApi();
   const [effects, setEffects] = useCachedState<string[]>("device-effects", deviceMetadata?.effects.effectsList ?? []);
-  const [customColors, setCustomColors] = useCachedState<HslWithName[]>("custom-colors", []);
+  const [customColors, setCustomColors] = useCachedState<HsvWithName[]>("custom-colors", []);
   const [customBrightnessValues, setCustomBrightnessValues] = useCachedState<number[]>("custom-brightness-values", []);
   const [isLoadingEffects, setIsLoadingEffects] = useState<boolean>(false);
 
@@ -69,10 +69,10 @@ export default function Command() {
     await showToast({ title: "Custom brightness value added successfully", style: Toast.Style.Success });
   }
 
-  async function handleSetCustomColor(color: tinycolor.ColorFormats.HSL) {
-    const hslColor = createHslColorWithName(color);
+  async function handleSetCustomColor(color: tinycolor.ColorFormats.HSV) {
+    const hsvColor = createHsvColorWithName(color);
 
-    setCustomColors((colors) => [...colors.filter((color) => color.name !== hslColor.name), hslColor]);
+    setCustomColors((colors) => [...colors.filter((color) => color.name !== hsvColor.name), hsvColor]);
 
     await setDeviceColor(color);
   }
@@ -106,7 +106,7 @@ export default function Command() {
     }
   }
 
-  function handleDeleteCustomColor(color: HslWithName) {
+  function handleDeleteCustomColor(color: HsvWithName) {
     setCustomColors((colors) => colors.filter((currentColor) => currentColor.name !== color.name));
   }
 
@@ -236,7 +236,7 @@ export default function Command() {
                     <Action
                       title={capitalize(color.name)}
                       key={color.name}
-                      onAction={() => handleSetCustomColor(color.hsl)}
+                      onAction={() => handleSetCustomColor(color.hsv)}
                     />
                   ))}
                 </ActionPanel.Section>

@@ -3,7 +3,7 @@ import { useState } from "react";
 import tinycolor from "tinycolor2";
 
 interface Props {
-  onSetCustomColor: (value: tinycolor.ColorFormats.HSL) => void;
+  onSetCustomColor: (value: tinycolor.ColorFormats.HSV) => void;
 }
 
 export function AddCustomColorForm({ onSetCustomColor }: Props) {
@@ -16,7 +16,7 @@ export function AddCustomColorForm({ onSetCustomColor }: Props) {
 
     if (colorObj.isValid()) {
       setError("");
-      const colorValue = tinycolor(color).toHsl();
+      const colorValue = tinycolor(color).toHsv();
       onSetCustomColor(colorValue);
 
       pop();

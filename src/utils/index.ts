@@ -1,16 +1,16 @@
 import tinycolor from "tinycolor2";
-import { HslWithName } from "../types";
+import { HsvWithName } from "../types";
 
-export function createHslColorWithName(color: tinycolor.ColorFormats.HSL): HslWithName {
+export function createHsvColorWithName(color: tinycolor.ColorFormats.HSV): HsvWithName {
   const colorObj = tinycolor(color);
   const colorName = colorObj.toName() || colorObj.toHexString();
 
-  const hslColorWithName: HslWithName = {
-    hsl: color,
+  const hsvColorWithName: HsvWithName = {
+    hsv: color,
     name: colorName,
   };
 
-  return hslColorWithName;
+  return hsvColorWithName;
 }
 
 export function capitalize(str: string): string {
