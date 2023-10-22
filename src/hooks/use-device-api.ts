@@ -64,7 +64,7 @@ export function useDeviceApi() {
 
       setDeviceMetadata(data);
     } catch (e) {
-      console.log(e);
+      Promise.reject(e);
     } finally {
       setConnected(false);
     }

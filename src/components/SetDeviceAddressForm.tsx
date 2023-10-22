@@ -75,7 +75,7 @@ export function SetDeviceAddressForm({ currentDeviceAddress, onSetDeviceAddress 
         error={error}
       ></Form.TextField>
       <Form.Separator />
-      <Form.Description text="If you are unable to find your device's IPv4 address, we can attempt to auto-scan your network and add the address for you. Hit ⌘+⇧+⏎ to get started." />
+      <Form.Description text="If you are unable to locate your device's IPv4 address, Leafcast can attempt to auto-scan your network and add the address for you. Hit ⌘+⇧+⏎ to get started." />
     </Form>
   );
 }
