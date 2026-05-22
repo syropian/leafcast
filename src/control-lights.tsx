@@ -134,14 +134,14 @@ export default function Command() {
             ]}
             actions={
               <ActionPanel>
-                <ActionPanel.Submenu title="Turn Your Device On or Off">
+                <ActionPanel.Submenu title="Turn Your Device on or off">
                   <Action
-                    title="Turn On"
+                    title="Turn on"
                     onAction={turnOnDevice}
                     icon={{ source: Icon.Power, tintColor: Color.Green }}
                   />
                   <Action
-                    title="Turn Off"
+                    title="Turn off"
                     onAction={turnOffDevice}
                     icon={{ source: Icon.Power, tintColor: Color.Red }}
                   />
