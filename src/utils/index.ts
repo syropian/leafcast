@@ -15,14 +15,21 @@ export async function discoverNanoleafDevices(timeoutMs = 3000): Promise<Discove
   const found = new Map<string, DiscoveredDevice>();
 
   return new Promise((resolve) => {
-    const browser = bonjour.find({ type: "nanoleafapi", protocol: "tcp" }, (service) => {
-      const ipv4 = service.addresses?.find((addr) => isValidIPv4(addr));
-      if (!ipv4) return;
-      const key = `${service.name}@${ipv4}`;
-      if (!found.has(key)) {
-        found.set(key, { name: service.name, address: ipv4, port: service.port });
-      }
-    });
+    let browser: ReturnType<typeof bonjour.find>;
+    try {
+      browser = bonjour.find({ type: "nanoleafapi", protocol: "tcp" }, (service) => {
+        const ipv4 = service.addresses?.find((addr) => isValidIPv4(addr));
+        if (!ipv4) return;
+        const key = `${service.name}@${ipv4}`;
+        if (!found.has(key)) {
+          found.set(key, { name: service.name, address: ipv4, port: service.port });
+        }
+      });
+    } catch {
+      bonjour.destroy();
+      resolve([]);
+      return;
+    }
 
     setTimeout(() => {
       browser.stop();

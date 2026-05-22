@@ -45,9 +45,14 @@ export default function Command() {
 
   async function doGetDeviceEffects() {
     setIsLoadingEffects(true);
-    const effects = await getDeviceEffects();
-    setEffects(effects);
-    setIsLoadingEffects(false);
+    try {
+      const effects = await getDeviceEffects();
+      setEffects(effects);
+    } catch (error) {
+      await showFailureToast(error, { title: "Couldn't load effects" });
+    } finally {
+      setIsLoadingEffects(false);
+    }
   }
 
   async function doUpdateDeviceEffect(effect: string) {
