@@ -10,8 +10,7 @@ export default async function Command() {
       throw new Error("No effects available on the device.");
     }
     const currentIndex = list.indexOf(info.effects.select);
-    const prevIndex =
-      currentIndex === -1 ? list.length - 1 : (currentIndex - 1 + list.length) % list.length;
+    const prevIndex = currentIndex === -1 ? list.length - 1 : (currentIndex - 1 + list.length) % list.length;
     const previous = list[prevIndex];
     await setEffect(previous);
     await showHUD(`Effect: ${previous}`);

@@ -13,9 +13,7 @@ export default async function tool(input: Input) {
   const effects = await getEffects();
   const match = effects.find((effect) => effect.toLowerCase() === input.effect.toLowerCase());
   if (!match) {
-    throw new Error(
-      `Effect "${input.effect}" not found. Available effects: ${effects.join(", ")}.`,
-    );
+    throw new Error(`Effect "${input.effect}" not found. Available effects: ${effects.join(", ")}.`);
   }
   await setEffect(match);
   return `Effect set to "${match}".`;

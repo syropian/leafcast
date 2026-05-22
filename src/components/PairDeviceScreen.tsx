@@ -15,11 +15,7 @@ import { useState } from "react";
 import { identify } from "../lib/nanoleaf-client";
 import { getPairingErrorMessage } from "../utils";
 
-type PairingStatus =
-  | { kind: "idle" }
-  | { kind: "pairing" }
-  | { kind: "success" }
-  | { kind: "failed"; message: string };
+type PairingStatus = { kind: "idle" } | { kind: "pairing" } | { kind: "success" } | { kind: "failed"; message: string };
 
 interface Props {
   deviceAddress: string;

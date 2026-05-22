@@ -2,15 +2,7 @@ import { getPreferenceValues } from "@raycast/api";
 import { useCachedState } from "@raycast/utils";
 import { useEffect, useState } from "react";
 import type tinycolor from "tinycolor2";
-import {
-  getDeviceInfo,
-  getEffects,
-  pair,
-  setBrightness,
-  setColor,
-  setEffect,
-  setPower,
-} from "../lib/nanoleaf-client";
+import { getDeviceInfo, getEffects, pair, setBrightness, setColor, setEffect, setPower } from "../lib/nanoleaf-client";
 import { DeviceInfo } from "../types";
 
 export function useDeviceApi() {
