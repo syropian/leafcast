@@ -1,6 +1,6 @@
 # Leafcast Changelog
 
-## [Pairing, AI Tools, and Quick Commands] - 2026-05-22
+## [Pairing, AI Tools, and Quick Commands] - {PR_MERGE_DATE}
 
 ### Added
 
